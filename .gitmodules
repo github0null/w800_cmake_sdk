@@ -1,0 +1,3 @@
+[submodule "cmake"]
+	path = cmake
+	url = git@github.com:github0null/cmake_embedded_project_rules.git
