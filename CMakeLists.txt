@@ -8,6 +8,8 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../sdk.conf")
     set(SDK_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/../sdk.conf")
 endif()
 
+message(STATUS "sdk config file: ${SDK_CONF_PATH}")
+
 kconfig_include("${SDK_CONF_PATH}"
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     OUTPUT_HEADER_NAME "sdk_conf.h"
