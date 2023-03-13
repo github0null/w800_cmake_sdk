@@ -147,4 +147,9 @@
 #include "net/wm_socket.h"
 #include "net/wm_sockets.h"
 
+int w800sdk_get_version_main(void);
+int w800sdk_get_version_sub(void);
+int w800sdk_get_version_revision(void);
+const char *w800sdk_get_version_string(void);
+
 #endif
