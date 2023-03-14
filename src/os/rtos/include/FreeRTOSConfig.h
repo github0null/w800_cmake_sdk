@@ -72,12 +72,10 @@
 #define configUSE_IDLE_HOOK			1	//使用空闲钩子
 #define configUSE_TICK_HOOK			0	//不使用时间片钩子
 
-#define configCPU_CLOCK_HZ			( ( unsigned long ) 40000000 )	/* =12.0MHz xtal multiplied by 5 using the PLL. *///内部处理器执行频率
-
 #define configTICK_RATE_HZ			( ( portTickType ) 500u )	//时间片中断的频率
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 63)	//应用程序中可用优先级的数目
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 90 )	//空闲任务使用的堆栈大小
-#define configTOTAL_HEAP_SIZE		( ( size_t ) 32 * 1024 )		//内核中可用的RAM数量,heap2使用
+#define configTOTAL_HEAP_SIZE		( ( size_t ) 64 * 1024 )		//内核中可用的RAM数量,heap2使用
 #define configMAX_TASK_NAME_LEN		( 8 )	//创建任务名称最大允许长度
 #define configUSE_TRACE_FACILITY	1		//是否使用可视化追踪
 #define configUSE_16_BIT_TICKS		0	//定义portTickType

@@ -25,7 +25,7 @@ unsigned int  TLS_FLASH_PARAM1_ADDR          =		  (0x81FC000UL);
 unsigned int  TLS_FLASH_PARAM2_ADDR          =		  (0x81FD000UL);
 unsigned int  TLS_FLASH_PARAM_RESTORE_ADDR   =	      (0x81FE000UL);
 unsigned int  TLS_FLASH_OTA_FLAG_ADDR        =	      (0x81FF000UL);
-unsigned int  TLS_FLASH_END_ADDR             =		  (0x81FFFFFUL);
+unsigned int  TLS_FLASH_END_ADDR             =		  (0x8200000UL);
 
 
 static vu32 read_first_value(void)
@@ -1388,7 +1388,7 @@ void tls_fls_sys_param_postion_init(void)
     err = tls_fls_get_param(TLS_FLS_PARAM_TYPE_SIZE, (void *)&density);
     if (TLS_FLS_STATUS_OK == err)
     {
-        TLS_FLASH_END_ADDR            = (FLASH_BASE_ADDR|density) - 1;
+        TLS_FLASH_END_ADDR            = (FLASH_BASE_ADDR|density);
         TLS_FLASH_OTA_FLAG_ADDR       = (FLASH_BASE_ADDR|density) - 0x1000;
         TLS_FLASH_PARAM_RESTORE_ADDR  =	(FLASH_BASE_ADDR|density) - 0x2000;
         TLS_FLASH_PARAM2_ADDR 		  =	(FLASH_BASE_ADDR|density) - 0x3000;

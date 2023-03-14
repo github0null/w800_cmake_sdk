@@ -75,11 +75,10 @@ CRYPTO
 
 #define TLS_CONFIG_NTP 									CFG_ON
 
-
-#define TLS_CONFIG_BR_EDR								CFG_OFF
 #define TLS_CONFIG_BLE                                  CFG_ON
 
-#define TLS_CONFIG_BT                                  (TLS_CONFIG_BR_EDR || TLS_CONFIG_BLE)
+#define TLS_CONFIG_BT                                   (!TLS_CONFIG_BLE)
+#define TLS_CONFIG_BR_EDR								(!TLS_CONFIG_BLE)
 
 #include "wm_os_config.h"  //if you want to use source code,please open
 #include "wm_wifi_config.h"

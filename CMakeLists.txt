@@ -12,8 +12,8 @@ message(STATUS "sdk config file: ${SDK_CONF_PATH}")
 
 kconfig_include("${SDK_CONF_PATH}"
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-    OUTPUT_HEADER_NAME "sdk_conf.h"
-    OUTPUT_CONF_NAME "sdk_conf")
+    OUTPUT_HEADER_NAME "w800sdk_conf.h"
+    OUTPUT_CONF_NAME "w800sdk_conf")
 
 set(W800_PRIVATE_LIBS
     wlan
@@ -27,13 +27,8 @@ set(W800_TARGET_LIBS
     drivers
     network
     os
-    wmsys)
-
-if(CONFIG_W800_USE_NIMBLE)
-    list(APPEND W800_TARGET_LIBS blehost)
-else()
-    list(APPEND W800_TARGET_LIBS bthost)
-endif()
+    wmsys
+    blehost)
 
 if(CONFIG_W800_FIRMWARE_DEBUG)
     add_compile_definitions(WM_SWD_ENABLE=1)
@@ -52,15 +47,9 @@ set(EXPORT_INC_DIRS)
 set(EXPORT_GCC_FLGS)
 set(EXPORT_GCC_DEFS)
 
-if(CONFIG_W800_USE_NIMBLE)
-    list(APPEND EXPORT_GCC_DEFS NIMBLE_FTR=1)
-    list(APPEND EXPORT_INC_DIRS ${CMAKE_CURRENT_LIST_DIR}/src/app/bleapp)
-else()
-    list(APPEND EXPORT_GCC_DEFS NIMBLE_FTR=0)
-    list(APPEND EXPORT_INC_DIRS ${CMAKE_CURRENT_LIST_DIR}/src/app/btapp)
-endif()
-
 list(APPEND EXPORT_INC_DIRS
+    # sdk_cfg
+    ${CMAKE_CURRENT_BINARY_DIR}
     # base
     ${CMAKE_CURRENT_LIST_DIR}/include
     ${CMAKE_CURRENT_LIST_DIR}/include/app
@@ -78,6 +67,7 @@ list(APPEND EXPORT_INC_DIRS
     ${CMAKE_CURRENT_LIST_DIR}/platform/inc
     ${CMAKE_CURRENT_LIST_DIR}/platform/sys
     # components
+    ${CMAKE_CURRENT_LIST_DIR}/src/app/bleapp
     ${CMAKE_CURRENT_LIST_DIR}/src/app/easylogger/easylogger/inc
     ${CMAKE_CURRENT_LIST_DIR}/src/app/lwrb-2.0.3/lwrb/src/include/lwrb
     ${CMAKE_CURRENT_LIST_DIR}/src/app/wm_atcmd
@@ -112,7 +102,8 @@ list(APPEND EXPORT_GCC_FLGS
 
 list(APPEND EXPORT_GCC_DEFS
     "TLS_CONFIG_CPU_XT804=1"
-    "GCC_COMPILE=1")
+    "GCC_COMPILE=1"
+    "NIMBLE_FTR=1")
 
 # export
 target_include_directories(${MODULE_NAME} PUBLIC ${EXPORT_INC_DIRS})

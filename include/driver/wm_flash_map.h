@@ -10,6 +10,8 @@
 #ifndef __WM_FLASH_MAP_H__
 #define __WM_FLASH_MAP_H__
 
+#include "w800sdk_conf.h"
+
 /**FLASH MAP**/
 
 /**Flash Base Address */
@@ -22,8 +24,8 @@
 #define CODE_RUN_START_ADDR                 (0x80D0000UL)
 
 /**Area can be used by User*/
-#define USER_ADDR_START						(0x81E0000UL)
-
+#define USER_ADDR_START						(CONFIG_W800_IMAGE_USR_ADDR)
+#define USER_DATA_SIZE                      (CONFIG_W800_IMAGE_END_ADDR - CONFIG_W800_IMAGE_USR_ADDR)
 
 /**System parameter defined in wm_internal_fls.c*/
 extern unsigned int TLS_FLASH_PARAM_DEFAULT;

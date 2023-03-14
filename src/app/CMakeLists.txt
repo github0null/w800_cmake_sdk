@@ -13,11 +13,7 @@ foreach(file_name ${sub_files})
     endif()
 endforeach()
 
-if(CONFIG_W800_USE_NIMBLE)
-    list(REMOVE_ITEM SUB_MODULES "btapp")
-else()
-    list(REMOVE_ITEM SUB_MODULES "bleapp")
-endif()
+list(REMOVE_ITEM SUB_MODULES "btapp")
 
 set(OBJS)
 
