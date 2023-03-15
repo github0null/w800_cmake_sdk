@@ -1,7 +1,8 @@
 
 set(MODULE_NAME "w800sdk")
 
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/kconfig.cmake)
+# ref: https://github.com/github0null/cmake_embedded_project_rules
+include(${CMAKE_SOURCE_DIR}/cmake/utils/kconfig.cmake)
 
 set(SDK_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/sdk.conf")
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../sdk.conf")
