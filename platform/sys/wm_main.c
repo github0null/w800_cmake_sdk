@@ -316,7 +316,7 @@ void tls_mem_get_init_available_size(void)
 	}
 }
 
-void tls_pmu_chipsleep_callback(int sleeptime)
+void tls_pmu_chipsleep_callback(uint32_t sleeptime)
 {
 	//wm_printf("c:%d\r\n", sleeptime);
 	/*set wakeup time*/

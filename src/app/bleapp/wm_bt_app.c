@@ -301,7 +301,7 @@ int tls_ble_demo_adv(uint8_t type)
         extern int tls_get_bt_mac_addr(uint8_t *mac);
         
         tls_get_bt_mac_addr(bt_mac);
-        sprintf(adv_data+5,"%02X:%02X:%02X",bt_mac[3], bt_mac[4], bt_mac[5]);
+        sprintf((char *)(adv_data+5),"%02X:%02X:%02X",bt_mac[3], bt_mac[4], bt_mac[5]);
         adv_data[13] = 0x02;  //byte 13 was overwritten to zero by sprintf; recover it;
         rc = tls_ble_gap_set_data(WM_BLE_ADV_DATA, adv_data, 20);
         switch(type)

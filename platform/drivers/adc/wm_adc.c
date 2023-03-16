@@ -200,9 +200,9 @@ void tls_adc_start_with_dma(int Channel, int Length)
 	}
 
     DMA_SRCADDR_REG(gst_adc.dmachannel) = HR_SD_ADC_RESULT_REG;
-	DMA_DESTADDR_REG(gst_adc.dmachannel) = adc_dma_buffer;
+	DMA_DESTADDR_REG(gst_adc.dmachannel) = (uint32_t)adc_dma_buffer;
 	DMA_SRCWRAPADDR_REG(gst_adc.dmachannel) = HR_SD_ADC_RESULT_REG;
-	DMA_DESTWRAPADDR_REG(gst_adc.dmachannel) = adc_dma_buffer;
+	DMA_DESTWRAPADDR_REG(gst_adc.dmachannel) = (uint32_t)adc_dma_buffer;
     DMA_WRAPSIZE_REG(gst_adc.dmachannel) = (len*4) << 16;
 
 	/* Dest_add_inc, halfword,  */
@@ -499,7 +499,7 @@ u32 adc_get_interVolt(void)
 	{
 		waitForAdcDone();
 		value = tls_read_adc_result();
-		signedToUnsignedData(&value);
+		signedToUnsignedData((int32_t *)&value);
 		voltValue += value;
 	}
 	voltValue = voltValue/10;

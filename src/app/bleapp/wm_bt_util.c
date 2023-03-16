@@ -225,7 +225,7 @@ int tls_bt_util_deinit(void)
 
 int tls_bt_util_init(void)
 {
-    dl_list_init(&async_evt_list);
+    dl_list_init(&async_evt_list.list);
     ble_npl_mutex_init(&async_evt_list.list_mutex);
 }
 

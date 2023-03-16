@@ -229,7 +229,7 @@ wm_ble_client_demo_on_write(uint16_t conn_handle,
 
     return 0;
 }
-static int
+static void
 wm_ble_client_async_gap_scan(void *app_arg)
 {
     tls_ble_gap_scan(WM_BLE_SCAN_PASSIVE, true);    

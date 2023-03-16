@@ -735,6 +735,7 @@ tls_os_status_t tls_os_queue_remove(tls_os_queue_t *queue, void* msg, u32 msg_si
         vPortExitCritical();
     }
 
+	return TLS_OS_SUCCESS;
 }
 /*
 *********************************************************************************************************

@@ -205,7 +205,7 @@ int tls_crypto_mbedtls_exptmod( mbedtls_mpi *X, const mbedtls_mpi *A, const mbed
     mbedtls_mpi_init(&X1);
     mbedtls_mpi_init(&Y);
     mbedtls_mpi_init(&R);
-	MBEDTLS_MPI_CHK( mbedtls_mpi_shrink( N, max_len ) );
+	MBEDTLS_MPI_CHK( mbedtls_mpi_shrink( (mbedtls_mpi *)N, max_len ) );
 	
     MBEDTLS_MPI_CHK( mbedtls_mpi_lset( &R, 1 ) );
     MBEDTLS_MPI_CHK( mbedtls_mpi_shift_l( &R, N->n * biL ) );
@@ -224,7 +224,7 @@ int tls_crypto_mbedtls_exptmod( mbedtls_mpi *X, const mbedtls_mpi *A, const mbed
     rsaCalMc(&mc, dp0);
     rsaMonMulSetLen(N->n);
     rsaMonMulWriteMc(mc);
-    rsaMulModWrite('M', N);
+    rsaMulModWrite('M', (mbedtls_mpi *)N);
     rsaMulModWrite('B', &X1);
     rsaMulModWrite('A', &Y);
 	

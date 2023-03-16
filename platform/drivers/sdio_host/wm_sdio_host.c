@@ -532,7 +532,7 @@ int wm_sd_card_dma_config(u32*mbuf,u32 bufsize,u8 dir)
 	int ch;
 	u32 addr_inc = 0;
 
-	ch = tls_dma_request(0, NULL);
+	ch = tls_dma_request(0, 0);
 	DMA_CHNLCTRL_REG(ch) = DMA_CHNL_CTRL_CHNL_OFF;
 
 	if(dir)

@@ -31,10 +31,10 @@ static struct ble_npl_callout g_async_send_timer;
 #define RING_BUFFER_SIZE (4096)
 
 
-static void wm_uart_async_write(uint8_t *p_data, uint16_t length)
+static void wm_uart_async_write(uint8_t *p_data, uint32_t length)
 {
     //TLS_BT_APPL_TRACE_API("%s , send to uart %d bytes\r\n", __FUNCTION__, length);
-    tls_uart_write_async(g_uart_id, p_data, length);    
+    tls_uart_write_async(g_uart_id, (char *)p_data, length);    
 }
 
 static void wm_uart_async_send_cb(struct ble_npl_event *evt)
@@ -69,17 +69,17 @@ static void wm_uart_async_send_cb(struct ble_npl_event *evt)
         ble_npl_callout_reset(&g_async_send_timer,ble_npl_time_ms_to_ticks32(10));
     } 
 }
-static void wm_uart_async_read_cb(int size, void *user_data)
+static uint16_t wm_uart_async_read_cb(uint16_t size, void *user_data)
 {
     int read_out = 0;
     uint32_t cache_length = 0;
 
-    if(size <= 0) return;
+    if(size <= 0) return read_out;
 
     if(bt_ringbuffer_available(g_rb_ptr)< size)
     {
         TLS_BT_APPL_TRACE_WARNING("ble uart cache buffer is full, mode[%d]\r\n", g_bum);
-        return;
+        return read_out;
     }
     
     uint8_t *tmp_ptr = tls_mem_alloc(size);
@@ -97,6 +97,8 @@ static void wm_uart_async_read_cb(int size, void *user_data)
     }
 
     tls_mem_free(tmp_ptr);
+
+    return read_out;
 }
 /*
  * EXPORTED FUNCTION DEFINITIONS

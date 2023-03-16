@@ -97,6 +97,8 @@ wm_ble_client_demo_on_write(uint16_t conn_handle,
 err:
     /* Terminate the connection. */
     ble_gap_terminate(conn_handle, BLE_ERR_REM_USER_CONN_TERM);    
+
+    return -1;
 }
 
 /**

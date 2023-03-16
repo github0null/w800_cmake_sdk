@@ -133,6 +133,7 @@ static bool check_sending_list_and_send();
 static void resend_app_msg(uint8_t *ptr, int length);
 static int wm_ble_wifi_cfg_disconnected_cb(int status);
 
+void build_cmd_rsp(uint8_t opcode, uint8_t flag, uint8_t *ptr, int length);
 
 /*
  * LOCAL FUNCTION DEFINITIONS
@@ -213,7 +214,7 @@ static int rng_func(void *ctx, unsigned char *out, size_t len)
 	tls_crypto_random_stop();
 	return 0;
 }
-static int bt_rsa_encrypt(uint8_t *pub_key, int pubkey_size, uint8_t *src_ptr, int length, uint8_t *dest_ptr, int dest_len)
+static int bt_rsa_encrypt(const uint8_t *pub_key, int pubkey_size, uint8_t *src_ptr, int length, uint8_t *dest_ptr, int dest_len)
 {
     int ret = -1;
 
@@ -927,12 +928,15 @@ static int wlan_config_process(const uint8_t *payload, int length)
 
 static int get_ap_list(const uint8_t *payload, int length)
 {
+    return -1;
 }
 static int wlan_enter_soft_ap_mode(const uint8_t *payload, int length)
 {
+    return -1;
 }
 static int wlan_enter_soft_ap_and_sta_mode(const uint8_t *payload, int length)
 {
+    return -1;
 }
 
 static int app_cmd_process(uint8_t *ptr, int length)

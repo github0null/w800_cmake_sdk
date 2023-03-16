@@ -96,7 +96,6 @@ int wm_ble_server_api_demo_adv(bool enable)
     if(enable)
     {
         struct ble_hs_adv_fields fields;
-        const char *name;
         
         /**
          *  Set the advertisement data included in our advertisements:
@@ -115,7 +114,7 @@ int wm_ble_server_api_demo_adv(bool enable)
                        BLE_HS_ADV_F_BREDR_UNSUP;
         
         
-        name = ble_svc_gap_device_name();
+        const char *name = ble_svc_gap_device_name();
         fields.name = (uint8_t *)name;
         fields.name_len = strlen(name);
         fields.name_is_complete = 1;
@@ -267,7 +266,7 @@ static void wm_ble_server_demo_start_indicate(void *arg)
             }else
             {
                TLS_BT_APPL_TRACE_DEBUG("Server send failed(%d), retry...\r\n", status); 
-               tls_bt_async_proc_func(wm_ble_server_demo_start_indicate,(void*)g_ble_demo_indicate_enable,1000);
+               tls_bt_async_proc_func(wm_ble_server_demo_start_indicate,(void*)&g_ble_demo_indicate_enable,1000);
             }
         }
     }    
@@ -376,7 +375,7 @@ static int ble_gap_evt_cb(struct ble_gap_event *event, void *arg)
                 {
                     tls_bt_async_proc_func(wm_ble_server_demo_conn_param_update_slave, NULL, 30);
                 }
-                tls_bt_async_proc_func(wm_ble_server_demo_start_indicate,(void*)g_ble_demo_indicate_enable, 30);
+                tls_bt_async_proc_func(wm_ble_server_demo_start_indicate,(void*)&g_ble_demo_indicate_enable, 30);
             }else
             {
                 if(g_ble_server_state != BLE_SERVER_MODE_EXITING)

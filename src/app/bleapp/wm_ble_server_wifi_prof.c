@@ -170,7 +170,6 @@ int tls_ble_wifi_adv(bool enable)
     if(enable)
     {
         struct ble_hs_adv_fields fields;
-        const char *name;
         uint8_t adv_ff_data[] = {0x0C, 0x07, 0x00, 0x10};
         /**
          *  Set the advertisement data included in our advertisements:
@@ -188,7 +187,7 @@ int tls_ble_wifi_adv(bool enable)
         fields.flags = BLE_HS_ADV_F_DISC_GEN |
                        BLE_HS_ADV_F_BREDR_UNSUP;
         
-        name = ble_svc_gap_device_name();
+        const char *name = ble_svc_gap_device_name();
         fields.name = (uint8_t *)name;
         fields.name_len = strlen(name);
         fields.name_is_complete = 1;

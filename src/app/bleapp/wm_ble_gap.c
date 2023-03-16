@@ -368,7 +368,10 @@ int tls_ble_gap_set_name(const char *dev_name, uint8_t update_flash)
     assert(dev_name != NULL);
 
     /*config host stack device name*/
-    ble_svc_gap_device_name_set(dev_name);
+    ret = ble_svc_gap_device_name_set(dev_name);
+    if (ret != 0) {
+        return ret;
+    }
 
     /*Update ram information and flush it if needed*/
     if(update_flash)
@@ -380,6 +383,7 @@ int tls_ble_gap_set_name(const char *dev_name, uint8_t update_flash)
             return 0;
         }
     }
+
     return ret;
 }
 int tls_ble_gap_get_name(char *dev_name)
