@@ -4,14 +4,17 @@ set(MODULE_NAME "w800sdk")
 # ref: https://github.com/github0null/cmake_embedded_project_rules
 include(${CMAKE_SOURCE_DIR}/cmake/utils/kconfig.cmake)
 
-set(SDK_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/sdk.conf")
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../sdk.conf")
-    set(SDK_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/../sdk.conf")
+if(NOT DEFINED W800_SDK_CONF_PATH)
+    set(W800_SDK_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/sdk.conf")
 endif()
 
-message(STATUS "sdk config file: ${SDK_CONF_PATH}")
+message(STATUS "use w800 sdk config: ${W800_SDK_CONF_PATH}")
 
-kconfig_include("${SDK_CONF_PATH}"
+if(NOT EXISTS "${W800_SDK_CONF_PATH}")
+    message(FATAL_ERROR "not found config file: '${W800_SDK_CONF_PATH}'")
+endif()
+
+kconfig_include("${W800_SDK_CONF_PATH}"
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     OUTPUT_HEADER_NAME "w800sdk_conf.h"
     OUTPUT_CONF_NAME "w800sdk_conf")
