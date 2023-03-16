@@ -10,6 +10,7 @@
 #include "wm_bt_app.h"
 #include "wm_bt_util.h"
 #include "host/ble_hs.h"
+#include "services/gap/ble_svc_gap.h"
 #include "wm_ble_gap.h"
 #include "wm_ble_uart_if.h"
 #include "wm_ble_server_api_demo.h"

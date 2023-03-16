@@ -36,7 +36,7 @@ npl_freertos_eventq_get(struct ble_npl_eventq *evq, ble_npl_time_t tmo)
     struct ble_npl_event *ev = NULL;
     tls_os_status_t status;
 
-    status = tls_os_queue_receive(evq->q,&ev,sizeof(ev),tmo);
+    status = tls_os_queue_receive(evq->q, (void **)&ev, sizeof(ev), tmo);
     assert(status == TLS_OS_SUCCESS);
     if (ev) {
         ev->queued = false;
@@ -249,7 +249,7 @@ npl_freertos_callout_init(struct ble_npl_callout *co, struct ble_npl_eventq *evq
     tls_os_status_t status;
     
     memset(co, 0, sizeof(*co));
-    status = tls_os_timer_create(&co->handle, os_callout_timer_cb, (void*)co, 1, 0, "co");
+    status = tls_os_timer_create(&co->handle, os_callout_timer_cb, (void*)co, 1, 0, (u8 *)"co");
     assert(status == TLS_OS_SUCCESS);
     
     co->evq = evq;

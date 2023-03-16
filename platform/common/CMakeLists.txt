@@ -19,7 +19,3 @@ target_include_directories(${MODULE_NAME} PUBLIC
 
 target_compile_definitions(${MODULE_NAME} PRIVATE
     )
-
-target_compile_options(${MODULE_NAME} PRIVATE
-    "-Wno-unused-variable"
-    "-Wno-unused-but-set-variable")

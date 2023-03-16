@@ -23,6 +23,7 @@
 #include "list.h"
 #include "host/ble_hs.h"
 #include "wm_bt_util.h"
+#include "nimble/nimble_port.h"
 
 typedef struct {
     struct dl_list list;
@@ -227,6 +228,7 @@ int tls_bt_util_init(void)
 {
     dl_list_init(&async_evt_list.list);
     ble_npl_mutex_init(&async_evt_list.list_mutex);
+    return 0;
 }
 
 tls_bt_status_t tls_bt_async_proc_func(app_async_func_t *app_cb, void *app_arg, int ticks)
@@ -248,6 +250,8 @@ tls_bt_status_t tls_bt_async_proc_func(app_async_func_t *app_cb, void *app_arg, 
     
     ble_npl_callout_init(&aet->co, nimble_port_get_dflt_eventq(), async_evt_func, (void*)bat);
     ble_npl_callout_reset(&aet->co,ticks);
+
+    return 0;
 }
 
 

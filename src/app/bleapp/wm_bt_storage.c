@@ -804,11 +804,11 @@ int btif_wm_config_update_remote_device(const char *key)
 
 int btif_wm_config_set_remote(const nv_tag_t section, const char *key, const nv_tag_t name, const char  *value, int bytes, int type, bool dummy_wr)
 {
-
+    return -1;
 }
 int btif_wm_config_get_remote(const nv_tag_t section, const char *key, const nv_tag_t name, char *value, int *bytes, int *type, bool dummy_rd)
 {
-
+    return -1;
 }
 
 int btif_wm_config_filter_remove_remote(const char *section, const char *filter[], int filter_count, int max_allowed)
@@ -1085,7 +1085,7 @@ int btif_config_get_sec_index(void *addr, uint8_t *found)
     int i = 0;
     bt_remote_device_t device;
     ble_addr_t *addr_offset;
-    uint8_t *ptr_offset = &device;
+    uint8_t *ptr_offset = (uint8_t *)&device;
 
     for(i = 0; i<BTM_SEC_MAX_BLE_DEVICE_RECORDS; i++)
     {
@@ -1136,109 +1136,106 @@ void dump_bt_device_info(bt_remote_device_t *device)
 int btif_config_store_cccd(int idx, void *addr, int count, void *payload, int length)
 {
     bt_remote_device_t device;
-    uint8_t *ptr_offset = &device;
+
+    uint8_t *ptr_base = (uint8_t *)&device;
+    uint8_t *ptr_writ = NULL;
 
     assert(idx < BTM_SEC_MAX_BLE_DEVICE_RECORDS);
-    memset(0, &device, sizeof(device));
+    memset(&device, 0, sizeof(device));
 
     tls_param_get(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
-    if((device.valid_tag == 0xdeadbeae))
-    {
-         device.valid_bit = (count)<<2 | (device.valid_bit&0x03);
-         ptr_offset += NVRAM_CCCD_SEC_PAYLOAD_OFFSET;
-        
-         memcpy(ptr_offset, payload, length);
-    }else
-    {
 
+    if (device.valid_tag == 0xdeadbeae) {
+        device.valid_bit = (count)<<2 | (device.valid_bit&0x03);
+    } else {
         device.valid_tag = 0xdeadbeae;
         device.valid_bit = (count)<<2;
-        ptr_offset += NVRAM_ADDR_PAYLOAD_OFFSET;
-        memcpy(ptr_offset, addr, sizeof(ble_addr_t));
-        //ptr_offset += sizeof(ble_addr_t);
-        ptr_offset = NVRAM_CCCD_SEC_PAYLOAD_OFFSET;
-        memcpy(ptr_offset, payload, length);
+        ptr_writ = ptr_base + NVRAM_ADDR_PAYLOAD_OFFSET;
+        memcpy(ptr_writ, addr, sizeof(ble_addr_t));
     }
+
+    ptr_writ = ptr_base + NVRAM_CCCD_SEC_PAYLOAD_OFFSET;
+    memcpy(ptr_writ, payload, length);
+
     tls_param_set(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0); 
     //dump_bt_device_info(&device);
+
+    return 0;
 }
+
 int btif_config_store_our_sec(int idx,void *addr, uint8_t *payload, int length)
 {
-  
     bt_remote_device_t device;
-    uint8_t *ptr_offset = &device;
+
+    uint8_t *ptr_base = (uint8_t *)&device;
+    uint8_t *ptr_writ = NULL;
 
     assert(idx < BTM_SEC_MAX_BLE_DEVICE_RECORDS);
-    memset(0, &device, sizeof(device));
+    memset(&device, 0, sizeof(device));
 
     tls_param_get(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
-    if((device.valid_tag == 0xdeadbeae))
-    {
-         device.valid_bit |= 0x01;
-         ptr_offset += NVRAM_OUR_SEC_PAYLOAD_OFFSET;
-         
-         memcpy(ptr_offset, payload, length);
-    }else
-    {
 
+    if (device.valid_tag == 0xdeadbeae) {
+        device.valid_bit |= 0x01;
+    } else {
         device.valid_tag = 0xdeadbeae;
         device.valid_bit = 0x01;
-        ptr_offset += NVRAM_ADDR_PAYLOAD_OFFSET;
-        memcpy(ptr_offset, addr, sizeof(ble_addr_t));
-        ptr_offset += sizeof(ble_addr_t);
-        memcpy(ptr_offset, payload, length);
+        ptr_writ = ptr_base + NVRAM_ADDR_PAYLOAD_OFFSET;
+        memcpy(ptr_writ, addr, sizeof(ble_addr_t));
     }
+
+    ptr_writ = ptr_base + NVRAM_OUR_SEC_PAYLOAD_OFFSET;
+    memcpy(ptr_writ, payload, length);
+
     tls_param_set(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
     //dump_bt_device_info(&device);
+
     return 0;
-    
 }
 
 int btif_config_store_peer_sec(int idx,void *addr, uint8_t *payload, int length)
 {
-  
     bt_remote_device_t device;
-    uint8_t *ptr_offset = &device;
-    
+
+    uint8_t *ptr_base = (uint8_t *)&device;
+    uint8_t *ptr_writ = NULL;
+
     assert(idx < BTM_SEC_MAX_BLE_DEVICE_RECORDS);
-    memset(0, &device, sizeof(device));
+    memset(&device, 0, sizeof(device));
     
     tls_param_get(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
-    if((device.valid_tag == 0xdeadbeae))
-    {
-         device.valid_bit |= 0x02;
-         ptr_offset += NVRAM_PEER_SEC_PAYLOAD_OFFSET;
-         
-         memcpy(ptr_offset, payload, length);
-    }else
-    {
+
+    if (device.valid_tag == 0xdeadbeae) {
+        device.valid_bit |= 0x02;
+    } else {
         device.valid_tag = 0xdeadbeae;
         device.valid_bit = 0x02;
-        ptr_offset += NVRAM_ADDR_PAYLOAD_OFFSET;
-        memcpy(ptr_offset, addr, sizeof(ble_addr_t));
-        //ptr_offset += sizeof(ble_addr_t);
-        ptr_offset = NVRAM_PEER_SEC_PAYLOAD_OFFSET;
-        memcpy(ptr_offset, payload, length);
+        ptr_writ = ptr_base + NVRAM_ADDR_PAYLOAD_OFFSET;
+        memcpy(ptr_writ, addr, sizeof(ble_addr_t));
     }
+
+    ptr_writ = ptr_base + NVRAM_PEER_SEC_PAYLOAD_OFFSET;
+    memcpy(ptr_writ, payload, length);
+
     tls_param_set(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
-    
     //dump_bt_device_info(&device);
 
     return 0;
-    
 }
 
 uint32_t btif_config_get_sec_cccd_item(int idx, void *addr, void *our_sec,int our_sec_size, void *peer_sec, int peer_sec_size,void *cccd_info, int cccd_info_size)
 {
     bt_remote_device_t device;
-    uint8_t *ptr_offset = &device;  
+
+    uint8_t *ptr_offset = (uint8_t *)&device;  
     uint32_t valid_bit = 0;
-    
+
     assert(idx < BTM_SEC_MAX_BLE_DEVICE_RECORDS);
-    memset(0, &device, sizeof(device));
+    memset(&device, 0, sizeof(device));
+
     tls_param_get(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
-    if((device.valid_tag == 0xdeadbeae))
-    {
+
+    if (device.valid_tag == 0xdeadbeae) {
         valid_bit = device.valid_bit;
         memcpy(addr, ptr_offset+NVRAM_ADDR_PAYLOAD_OFFSET, 7);
         memcpy(our_sec, ptr_offset+NVRAM_OUR_SEC_PAYLOAD_OFFSET, our_sec_size);
@@ -1246,20 +1243,20 @@ uint32_t btif_config_get_sec_cccd_item(int idx, void *addr, void *our_sec,int ou
         memcpy(cccd_info,ptr_offset+NVRAM_CCCD_SEC_PAYLOAD_OFFSET, cccd_info_size );
         //dump_bt_device_info(&device);
     }
-    
 
     return valid_bit;
-    
 }
 
 int btif_config_delete_our_sec(int idx)
 {
     bt_remote_device_t device;
-    memset(0, &device, sizeof(device));
+
+    memset(&device, 0, sizeof(device));
     assert(idx < BTM_SEC_MAX_BLE_DEVICE_RECORDS);
-    
+
     tls_param_get(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
-    if((device.valid_tag == 0xdeadbeae))
+
+    if (device.valid_tag == 0xdeadbeae)
     {
         if(device.valid_bit & 0x01)
         {
@@ -1271,11 +1268,15 @@ int btif_config_delete_our_sec(int idx)
             tls_param_set(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
         }
     }
+
+    return 0;
 }
+
 int btif_config_delete_cccd(int idx)
 {
     bt_remote_device_t device;
-    memset(0, &device, sizeof(device));
+
+    memset(&device, 0, sizeof(device));
     assert(idx < BTM_SEC_MAX_BLE_DEVICE_RECORDS);
     
     tls_param_get(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
@@ -1291,12 +1292,15 @@ int btif_config_delete_cccd(int idx)
             tls_param_set(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
         }
     }
+
+    return 0;
 }
 
 int btif_config_delete_peer_sec(int idx)
 {
     bt_remote_device_t device;
-    memset(0, &device, sizeof(device));
+
+    memset(&device, 0, sizeof(device));
     assert(idx < BTM_SEC_MAX_BLE_DEVICE_RECORDS);
     
     tls_param_get(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
@@ -1312,6 +1316,8 @@ int btif_config_delete_peer_sec(int idx)
             tls_param_set(TLS_PARAM_ID_BT_REMOTE_DEVICE_1 + idx, (void *)&device, 0);
         }
     }
+
+    return 0;
 }
 
 int btif_config_store_key_map(const uint8_t *map_info, int length)

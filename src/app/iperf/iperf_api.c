@@ -2181,7 +2181,7 @@ void
 iperf_add_stream(struct iperf_test * test, struct iperf_stream * sp)
 {
     int i;
-    struct iperf_stream *n, *prev;
+    struct iperf_stream *n, *prev = NULL;
 
     if (SLIST_EMPTY(&test->streams)) {
         SLIST_INSERT_HEAD(&test->streams, sp, streams);

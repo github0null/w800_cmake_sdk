@@ -114,10 +114,15 @@ target_include_directories(${MODULE_NAME} PUBLIC ${EXPORT_INC_DIRS})
 target_compile_definitions(${MODULE_NAME} PUBLIC ${EXPORT_GCC_DEFS})
 target_compile_options(${MODULE_NAME} PUBLIC ${EXPORT_GCC_FLGS})
 
-# for current build
+# only for current target
 include_directories(${EXPORT_INC_DIRS})
 add_compile_definitions(${EXPORT_GCC_DEFS})
-add_compile_options(${EXPORT_GCC_FLGS} "-Wno-implicit-function-declaration" "-Wno-unused-function")
+add_compile_options(${EXPORT_GCC_FLGS} 
+    "-Wno-implicit-function-declaration" 
+    "-Wno-unused-function"
+    "-Wno-unused-variable"
+    "-Wno-unused-but-set-variable"
+    "-Wno-unused-label")
 
 # Auto add subdirectory
 file(GLOB sub_files RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "${CMAKE_CURRENT_LIST_DIR}/*")

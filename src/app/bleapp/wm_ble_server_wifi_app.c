@@ -26,6 +26,7 @@
 #include "wm_bt_app.h"
 #include "wm_bt_util.h"
 #include "host/ble_hs.h"
+#include "nimble/nimble_port.h"
 #include "wm_ble_server_wifi_prof.h"
 #include "mbedtls/pk.h"
 
@@ -219,7 +220,7 @@ static int bt_rsa_encrypt(const uint8_t *pub_key, int pubkey_size, uint8_t *src_
     int ret = -1;
 
     mbedtls_pk_context ctx_pk;
-	unsigned char *p = pub_key;
+	const uint8_t *p = pub_key;
 	size_t olen = 0;
 	mbedtls_pk_init(&ctx_pk);
 

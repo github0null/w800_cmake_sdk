@@ -18,7 +18,3 @@ target_compile_definitions(${MODULE_NAME} PRIVATE
     )
 
 target_link_libraries(${MODULE_NAME} PUBLIC blehost)
-
-target_compile_options(${MODULE_NAME} PRIVATE
-    "-Wno-unused-variable"
-    "-Wno-unused-but-set-variable")

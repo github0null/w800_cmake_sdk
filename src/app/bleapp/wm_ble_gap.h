@@ -2,7 +2,11 @@
 #define __WM_BLE_WIFI_INCLUDE_H__
 
 #include "wm_bt.h"
+#include "host/ble_hs.h"
 #include "host/ble_gap.h"
+
+#define BLE_SVC_GAP_NAME_MAX_LEN \
+    MYNEWT_VAL(BLE_SVC_GAP_DEVICE_NAME_MAX_LENGTH)
 
 typedef int (app_gap_evt_cback_t)(struct ble_gap_event *event, void *arg);
 

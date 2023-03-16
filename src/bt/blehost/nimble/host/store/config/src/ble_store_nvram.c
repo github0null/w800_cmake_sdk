@@ -29,6 +29,7 @@
 #include "store/config/ble_store_config.h"
 #include "ble_store_config_priv.h"
 #include "wm_bt_storage.h"
+#include "nimble/nimble_port.h"
 
 static struct ble_npl_callout g_defer_store_timer;
 

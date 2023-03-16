@@ -471,7 +471,7 @@ static void oneshot_lsd_finish(void)
 			memcpy(gucpwdData, lsd_param->pwd, lsd_param->pwd_len);	
 			gucpwdData[lsd_param->pwd_len] = '\0';
 			tls_wifi_set_oneshot_flag(0);
-			tls_wifi_connect_by_ssid_bssid(gucssidData, strlen(gucssidData), gucbssidData, gucpwdData, strlen(gucpwdData));
+			tls_wifi_connect_by_ssid_bssid(gucssidData, strlen((char *)gucssidData), gucbssidData, gucpwdData, strlen((char *)gucpwdData));
 	    }
 	    else
 	    {
@@ -481,7 +481,7 @@ static void oneshot_lsd_finish(void)
 			memcpy(gucpwdData, lsd_param->pwd, lsd_param->pwd_len);	
 			gucpwdData[lsd_param->pwd_len] = '\0';		
 			tls_wifi_set_oneshot_flag(0);
-			tls_wifi_connect(gucssidData, strlen(gucssidData), gucpwdData, strlen(gucpwdData));
+			tls_wifi_connect(gucssidData, strlen((char *)gucssidData), gucpwdData, strlen((char *)gucpwdData));
 	    }
 	}
 }

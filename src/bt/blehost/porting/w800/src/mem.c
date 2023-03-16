@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include "os/os.h"
 #include "mem/mem.h"
+#include "wm_mem.h"
 
 /**
  * Generic mempool allocation function.  Used with basic and extended mempools.

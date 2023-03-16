@@ -13,6 +13,7 @@
 #include "wm_ble_gap.h"
 #include "wm_ble_server_wifi_app.h"
 #include "wm_ble_server_wifi_prof.h"
+#include "services/gap/ble_svc_gap.h"
 
 
 /*

@@ -12,14 +12,13 @@
 #if (WM_NIMBLE_INCLUDED == CFG_ON)
 
 #include "host/ble_hs.h"
+#include "services/gap/ble_svc_gap.h"
 #include "wm_bt_app.h"
 #include "wm_ble_uart_if.h"
 #include "wm_ble_server_api_demo.h"
 #include "wm_ble_client_api_demo.h"
 #include "wm_bt_util.h"
 #include "wm_mem.h"
-
-
 
 
 static ringbuffer_t *g_rb_ptr = NULL;
