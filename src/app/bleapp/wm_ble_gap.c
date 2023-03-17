@@ -362,7 +362,7 @@ int tls_ble_gap_set_data(wm_ble_gap_data_t type, uint8_t *data, int data_len)
     return rc;
 }
 
-int tls_ble_gap_set_name(const char *dev_name, uint8_t update_flash)
+int tls_ble_gap_set_name(char *dev_name, uint8_t update_flash)
 {
     int ret;
     assert(dev_name != NULL);
