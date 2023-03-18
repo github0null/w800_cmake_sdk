@@ -49,6 +49,8 @@
 #include "factory_atcmd.h"
 #endif
 
+#include "w800sdk_conf.h"
+
 /* c librayr mutex */
 tls_os_sem_t    *libc_sem;
 /*----------------------------------------------------------------------------
@@ -119,7 +121,7 @@ extern u8 tx_gain_group[];
 extern void *tls_wl_init(u8 *tx_gain, u8 *mac_addr, u8 *hwver);
 extern int wpa_supplicant_init(u8 *mac_addr);
 extern void tls_sys_auto_mode_run(void);
-extern void UserMain(void);
+extern void UserMain(void *task_handle_ptr);
 extern void tls_bt_entry();
 
 void task_start (void *data);
@@ -434,7 +436,18 @@ void task_start (void *data)
 	    tls_param_set(TLS_PARAM_ID_PSM, &enable, TRUE);	  
 	}
 
-    UserMain();
+    // uart0 irq enable
+    tls_reg_write32(HR_UART0_INT_MASK, 0xFF);
+
+    static uint8_t usr_main_stk[CONFIG_USER_MAIN_TASK_STACK_SIZE];
+    static tls_os_task_t usr_main_h;
+    tls_os_task_create(&usr_main_h, "main",
+                       UserMain,
+                       (void *)&usr_main_h,
+                       (void *)usr_main_stk,             /* 任务栈的起始地址 */
+                       CONFIG_USER_MAIN_TASK_STACK_SIZE, /* 任务栈的大小     */
+                       TLS_USER_MAIN_TASK_PRIO,
+                       0);
 
     tls_sys_auto_mode_run();
 #endif
