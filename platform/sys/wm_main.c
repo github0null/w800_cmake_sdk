@@ -436,9 +436,17 @@ void task_start (void *data)
 	    tls_param_set(TLS_PARAM_ID_PSM, &enable, TRUE);	  
 	}
 
-    // uart0 irq enable
-    tls_reg_write32(HR_UART0_INT_MASK, 0xFF);
+    // init uart0
+    tls_uart_options_t uart_cfg = {
+        .baudrate   = 115200,
+        .charlength = TLS_UART_CHSIZE_8BIT,
+        .flow_ctrl  = TLS_UART_FLOW_CTRL_NONE,
+        .paritytype = TLS_PARAM_UART_PARITY_NONE,
+        .stopbits   = TLS_PARAM_UART_STOPBITS_1BITS,
+    };
+    tls_uart_port_init(TLS_UART_0, &uart_cfg, 0);
 
+    // main task
     static uint8_t usr_main_stk[CONFIG_USER_MAIN_TASK_STACK_SIZE];
     static tls_os_task_t usr_main_h;
     tls_os_task_create(&usr_main_h, "main",
