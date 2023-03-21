@@ -58,59 +58,38 @@ typedef struct cccd_nvram
 /* Gets the database in RAM filled up with keys stored in NVS. The sequence of
  * the keys in database may get lost.
  */
-static void
-ble_hs_log_flat_buf_tmp(const void *data, int len)
-{
-    const uint8_t *u8ptr;
-    int i;
-
-    u8ptr = data;
-    for (i = 0; i < len; i++) {
-        BLE_HS_LOG(ERROR, "0x%02x ", u8ptr[i]);
-    }
-}
-
 
 static void
 ble_store_nvram_print_value_sec(const struct ble_store_value_sec *sec)
 {
-    BLE_HS_LOG(ERROR, "addr=");
-    ble_hs_log_flat_buf_tmp(sec->peer_addr.val, 6);
-    BLE_HS_LOG(ERROR, " ");
+    BLE_HS_LOG(HEXDUMP, "addr", 8, sec->peer_addr.val, 6);
 
-    BLE_HS_LOG(ERROR, "peer_addr_type=%d ", sec->peer_addr.type);
-    
+    BLE_HS_LOG(INFO, "peer_addr_type=%d", sec->peer_addr.type);
+
     if (sec->ltk_present) {
-        BLE_HS_LOG(ERROR, "ediv=%u rand=%llu authenticated=%d ltk=",
-                       sec->ediv, sec->rand_num, sec->authenticated);
-        ble_hs_log_flat_buf_tmp(sec->ltk, 16);
-        BLE_HS_LOG(ERROR, " ");
-    }
-    if (sec->irk_present) {
-        BLE_HS_LOG(ERROR, "irk=");
-        ble_hs_log_flat_buf_tmp(sec->irk, 16);
-        BLE_HS_LOG(ERROR, " ");
-    }
-    if (sec->csrk_present) {
-        BLE_HS_LOG(ERROR, "csrk=");
-        ble_hs_log_flat_buf_tmp(sec->csrk, 16);
-        BLE_HS_LOG(ERROR, " ");
+        BLE_HS_LOG(INFO, "ediv=%u rand=%llu authenticated=%d", sec->ediv, sec->rand_num, sec->authenticated);
+        BLE_HS_LOG(HEXDUMP, "ltk", 4, sec->ltk, 16);
     }
 
-    BLE_HS_LOG(ERROR, "\n");
+    if (sec->irk_present) {
+        BLE_HS_LOG(HEXDUMP, "irk", 4, sec->irk, 16);
+    }
+
+    if (sec->csrk_present) {
+        BLE_HS_LOG(HEXDUMP, "csrk", 4, sec->csrk, 16);
+    }
+
+    BLE_HS_LOG(INFO, "\n");
 }
 static void 
 ble_store_nvram_print_value_cccd(const struct ble_store_value_cccd*sec)
 {
-    BLE_HS_LOG(ERROR, "addr=");
-    ble_hs_log_flat_buf_tmp(sec->peer_addr.val, 6);
-    BLE_HS_LOG(ERROR, " ");
-
-    BLE_HS_LOG(ERROR, "peer_addr_type=%d ", sec->peer_addr.type);
-    BLE_HS_LOG(ERROR, "chr_val_handle=%d(0x%04x) ", sec->chr_val_handle,sec->chr_val_handle); 
-    BLE_HS_LOG(ERROR, "flags=%d(0x%04x) ", sec->flags,sec->flags); 
-    BLE_HS_LOG(ERROR, "value_changed=%d(0x%04x) ", sec->value_changed,sec->value_changed);
-    BLE_HS_LOG(ERROR, "\n");
+    BLE_HS_LOG(HEXDUMP, "addr", 8, sec->peer_addr.val, 6);
+    BLE_HS_LOG(INFO,    "peer_addr_type=%d", sec->peer_addr.type);
+    BLE_HS_LOG(INFO,    "chr_val_handle=%d(0x%04x)", sec->chr_val_handle,sec->chr_val_handle); 
+    BLE_HS_LOG(INFO,    "flags=%d(0x%04x)", sec->flags,sec->flags); 
+    BLE_HS_LOG(INFO,    "value_changed=%d(0x%04x)", sec->value_changed,sec->value_changed);
+    BLE_HS_LOG(INFO,    "\n");
 }
 static void nvdump_hexstring(const char *note, uint8_t *ptr, int length)
 {
@@ -154,7 +133,7 @@ ble_nvs_restore_sec_keys()
         {
             if(nv_tag_valid & OUR_SEC_VALID_BIT_MASK)
             {
-                BLE_HS_LOG(ERROR, "load our  sec; ");
+                BLE_HS_LOG(INFO, "load our  sec; ");
                 ble_store_nvram_print_value_sec(&our_sec);
                 ble_store_config_our_secs[ble_store_config_num_our_secs] = our_sec;
                 ble_store_config_num_our_secs++;   
@@ -163,7 +142,7 @@ ble_nvs_restore_sec_keys()
             
             if(nv_tag_valid & PEER_SEC_VALID_BIT_MASK)
             {
-                BLE_HS_LOG(ERROR, "load peer sec; ");
+                BLE_HS_LOG(INFO, "load peer sec; ");
                 ble_store_nvram_print_value_sec(&peer_sec);
                 ble_store_config_peer_secs[ble_store_config_num_peer_secs] = peer_sec;
                 ble_store_config_num_peer_secs++;
@@ -179,7 +158,7 @@ ble_nvs_restore_sec_keys()
                 assert(cccd_count <=6);
                 for(j = 0; j< cccd_count;j++)
                 {
-                    BLE_HS_LOG(ERROR, "load our cccd; ");                   
+                    BLE_HS_LOG(INFO, "load our cccd; ");                   
                     memcpy(&cccd.peer_addr, &addr, sizeof(ble_addr_t));
                     cccd.chr_val_handle = ptr_value->chr_val_handle;
                     cccd.flags = ptr_value->flags;

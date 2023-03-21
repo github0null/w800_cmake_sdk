@@ -14,6 +14,7 @@
 #define BLE_HS_LOG_ERROR(...)       log_e(__VA_ARGS__)
 #define BLE_HS_LOG_CRITICAL(...)    log_e(__VA_ARGS__)
 #define BLE_HS_LOG_DISABLED(...)    IGNORE(__VA_ARGS__)
+#define BLE_HS_LOG_HEXDUMP(...)     elog_hexdump(__VA_ARGS__)
 
 #define DFLT_LOG_DEBUG(...)     IGNORE(__VA_ARGS__)
 #define DFLT_LOG_INFO(...)      log_i(__VA_ARGS__)
@@ -21,6 +22,7 @@
 #define DFLT_LOG_ERROR(...)     log_e(__VA_ARGS__)
 #define DFLT_LOG_CRITICAL(...)  log_e(__VA_ARGS__)
 #define DFLT_LOG_DISABLED(...)  IGNORE(__VA_ARGS__)
+#define DFLT_LOG_HEXDUMP(...)   elog_hexdump(__VA_ARGS__)
 
 #define MFG_LOG_DEBUG(...)      IGNORE(__VA_ARGS__)
 #define MFG_LOG_INFO(...)       log_i(__VA_ARGS__)
@@ -28,5 +30,6 @@
 #define MFG_LOG_ERROR(...)      log_e(__VA_ARGS__)
 #define MFG_LOG_CRITICAL(...)   log_e(__VA_ARGS__)
 #define MFG_LOG_DISABLED(...)   IGNORE(__VA_ARGS__)
+#define MFG_LOG_HEXDUMP(...)    elog_hexdump(__VA_ARGS__)
 
 #endif

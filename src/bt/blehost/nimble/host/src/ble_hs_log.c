@@ -23,25 +23,17 @@
 struct log ble_hs_log;
 
 void
-ble_hs_log_mbuf(const struct os_mbuf *om)
+ble_hs_log_mbuf(const struct os_mbuf *om_)
 {
-    uint8_t u8;
-    int i;
-
-    for (i = 0; i < OS_MBUF_PKTLEN(om); i++) {
-        os_mbuf_copydata(om, i, 1, &u8);
-        BLE_HS_LOG(DEBUG, "0x%02x ", u8);
+    struct os_mbuf *mbuff = om_;
+    while (mbuff) {
+        BLE_HS_LOG(HEXDUMP, "", 8, mbuff->om_data, mbuff->om_len);
+        mbuff = SLIST_NEXT(mbuff, om_next);
     }
 }
 
 void
 ble_hs_log_flat_buf(const void *data, int len)
 {
-    const uint8_t *u8ptr;
-    int i;
-
-    u8ptr = data;
-    for (i = 0; i < len; i++) {
-        BLE_HS_LOG(DEBUG, "0x%02x ", u8ptr[i]);
-    }
+    BLE_HS_LOG(HEXDUMP, "", 4, data, len);
 }
