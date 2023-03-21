@@ -12,8 +12,8 @@
 
 extern volatile tls_bt_state_t bt_adapter_state;
 
-int tls_at_bt_enable(int uart_no, tls_bt_log_level_t log_level);
+int tls_ble_enable(int uart_no, tls_bt_log_level_t log_level);
 
-int tls_at_bt_destroy(void);
+int tls_ble_destroy(void);
 
 #endif

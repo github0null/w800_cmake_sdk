@@ -25,9 +25,9 @@ struct log ble_hs_log;
 void
 ble_hs_log_mbuf(const struct os_mbuf *om_)
 {
-    struct os_mbuf *mbuff = om_;
+    struct os_mbuf *mbuff = (struct os_mbuf *)om_;
     while (mbuff) {
-        BLE_HS_LOG(HEXDUMP, "", 8, mbuff->om_data, mbuff->om_len);
+        BLE_HS_LOG(HEXDUMP, __FUNCTION__, 8, mbuff->om_data, mbuff->om_len);
         mbuff = SLIST_NEXT(mbuff, om_next);
     }
 }
@@ -35,5 +35,5 @@ ble_hs_log_mbuf(const struct os_mbuf *om_)
 void
 ble_hs_log_flat_buf(const void *data, int len)
 {
-    BLE_HS_LOG(HEXDUMP, "", 4, data, len);
+    BLE_HS_LOG(HEXDUMP, __FUNCTION__, 4, data, len);
 }

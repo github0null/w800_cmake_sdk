@@ -140,7 +140,7 @@ on_svr_register_cb(struct ble_gatt_register_ctxt *ctxt, void *arg)
 }
 
 
-int
+static int
 tls_bt_init(uint8_t uart_idx)
 {
     if(ble_system_state_on)
@@ -223,7 +223,7 @@ tls_bt_deinit(void)
 void tls_bt_entry()
 {
   //tls_bt_init(0x01);    //enable it if you want to turn on bluetooth after system booting
-  //tls_at_bt_enable(0xFF, 0);
+  //tls_ble_enable(0xFF, 0);
 }
 
 void tls_bt_exit()
@@ -237,13 +237,34 @@ void tls_bt_exit()
  ****************************************************************************************
  */
 
-int tls_at_bt_enable(int uart_no, tls_bt_log_level_t log_level)
+#include "elog.h"
+
+int tls_ble_enable(int uart_no, tls_bt_log_level_t log_level)
 {
 	int rc = 0;
 
 	tls_appl_trace_level = log_level;
-    
-	TLS_BT_APPL_TRACE_VERBOSE("bt system running, uart_no=%d, log_level=%d\r\n", uart_no, log_level);
+
+    switch (log_level) {
+        case TLS_BT_LOG_ERROR:
+            elog_set_filter_tag_lvl("nimble", ELOG_LVL_ERROR);
+            break;
+        case TLS_BT_LOG_WARNING:
+            elog_set_filter_tag_lvl("nimble", ELOG_LVL_WARN);
+            break;
+        case TLS_BT_LOG_API:
+        case TLS_BT_LOG_EVENT:
+        case TLS_BT_LOG_DEBUG:
+            elog_set_filter_tag_lvl("nimble", ELOG_LVL_DEBUG);
+            break;
+        case TLS_BT_LOG_VERBOSE:
+            elog_set_filter_tag_lvl("nimble", ELOG_LVL_VERBOSE);
+            break;
+        default:
+            break;
+    }
+
+    TLS_BT_APPL_TRACE_VERBOSE("bt system running, uart_no=%d, log_level=%d\r\n", uart_no, log_level);
 
     rc = tls_bt_init(uart_no);
     
@@ -255,7 +276,7 @@ int tls_at_bt_enable(int uart_no, tls_bt_log_level_t log_level)
 	return rc;
 }
 
-int tls_at_bt_destroy()
+int tls_ble_destroy()
 {
 	int rc = 0;
 	

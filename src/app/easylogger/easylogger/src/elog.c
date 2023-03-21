@@ -840,15 +840,22 @@ const char *elog_find_tag(const char *log, uint8_t lvl, size_t *tag_len) {
     return tag;
 }
 
+static int min(int a, int b) 
+{
+    return a <= b ? a : b;
+}
+
 /**
  * dump the hex format data to log
  *
+ * @param level log level
+ * @param tag log tag
  * @param name name for hex object, it will show on log header
  * @param width hex number for every line, such as: 16, 32
  * @param buf hex buffer
  * @param size buffer size
  */
-void elog_hexdump(const char *name, uint8_t width, const void *buf, uint16_t size)
+void elog_hexdump(uint8_t level, const char *tag, const char *name, uint8_t width, const void *buf, uint16_t size)
 {
 #define __is_print(ch)       ((unsigned int)((ch) - ' ') < 127u - ' ')
 
@@ -857,24 +864,31 @@ void elog_hexdump(const char *name, uint8_t width, const void *buf, uint16_t siz
     const uint8_t *buf_p = buf;
     char dump_string[8] = {0};
     int fmt_result;
+    char tag_space[(ELOG_FILTER_TAG_MAX_LEN / 2) + 1] = { 0 };
 
     if (!elog.output_enabled) {
         return;
     }
 
     /* level filter */
-    if (ELOG_LVL_DEBUG > elog.filter.level) {
+    if (level > elog.filter.level || 
+        level > elog_get_filter_tag_lvl(tag)) {
         return;
-    } else if (!strstr(name, elog.filter.tag)) { /* tag filter */
+    } else if (!strstr(tag, elog.filter.tag)) { /* tag filter */
         return;
     }
 
     /* lock output */
     elog_output_lock();
 
+    /* if the tag length is less than 50% ELOG_FILTER_TAG_MAX_LEN, then fill space */
+    if (strlen(tag) < ELOG_FILTER_TAG_MAX_LEN / 2) {
+        memset(tag_space, ' ', (ELOG_FILTER_TAG_MAX_LEN / 2) - strlen(tag));
+    }
+
     for (i = 0; i < size; i += width) {
         /* package header */
-        fmt_result = snprintf(log_buf, ELOG_LINE_BUF_SIZE, "D/HEX %s: %04X-%04X: ", name, i, i + width - 1);
+        fmt_result = snprintf(log_buf, ELOG_LINE_BUF_SIZE, "%s%s%s %s(%04X-%04X): ", level_output_info[level], tag, tag_space, name, i, i + width - 1);
         /* calculate log length */
         if ((fmt_result > -1) && (fmt_result <= ELOG_LINE_BUF_SIZE)) {
             log_len = fmt_result;
@@ -910,7 +924,7 @@ void elog_hexdump(const char *name, uint8_t width, const void *buf, uint16_t siz
         /* do log output */
 #if defined(ELOG_ASYNC_OUTPUT_ENABLE)
         extern void elog_async_output(uint8_t level, const char *log, size_t size);
-        elog_async_output(ELOG_LVL_DEBUG, log_buf, log_len);
+        elog_async_output(level, log_buf, log_len);
 #elif defined(ELOG_BUF_OUTPUT_ENABLE)
         extern void elog_buf_output(const char *log, size_t size);
     elog_buf_output(log_buf, log_len);

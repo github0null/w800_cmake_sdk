@@ -66,12 +66,12 @@ extern tls_bt_status_t exit_bt_test_mode();
 
 
 #if (WM_NIMBLE_INCLUDED == CFG_ON)
-extern int tls_at_bt_enable(int uart_no, tls_bt_log_level_t log_level);
-extern int tls_at_bt_destroy(void);
+extern int tls_ble_enable(int uart_no, tls_bt_log_level_t log_level);
+extern int tls_ble_destroy(void);
 #else
-extern int tls_at_bt_enable(int uart_no, tls_bt_log_level_t log_level, tls_bt_host_callback_t at_callback_ptr);
-extern int tls_at_bt_destroy(void);
-extern int tls_at_bt_cleanup_host(void);
+extern int tls_ble_enable(int uart_no, tls_bt_log_level_t log_level, tls_bt_host_callback_t at_callback_ptr);
+extern int tls_ble_destroy(void);
+extern int tls_ble_cleanup_host(void);
 #endif
 
 extern void tls_rf_bt_mode(uint8_t mode);
@@ -4757,7 +4757,7 @@ int bt_enable_proc(u8 set_opt, u8 update_flash, union HOSTIF_CMD_PARAMS_UNION *c
 
 	hif->uart_atcmd_bits |= (1<<UART_ATCMD_BIT_ACTIVE_BT_DM);
 
-	ret = tls_at_bt_enable(cmd->btctrl.type, (tls_bt_log_level_t)cmd->btctrl.level, bt_evt_cback);
+	ret = tls_ble_enable(cmd->btctrl.type, (tls_bt_log_level_t)cmd->btctrl.level, bt_evt_cback);
       
 	if (ret != TLS_BT_STATUS_SUCCESS)
 	{
@@ -4770,7 +4770,7 @@ int bt_enable_proc(u8 set_opt, u8 update_flash, union HOSTIF_CMD_PARAMS_UNION *c
 end_tag:
     
 #else
-    ret = tls_at_bt_enable(cmd->btctrl.type, (tls_bt_log_level_t)cmd->btctrl.level);
+    ret = tls_ble_enable(cmd->btctrl.type, (tls_bt_log_level_t)cmd->btctrl.level);
 #endif 
 
 
@@ -4791,7 +4791,7 @@ int bt_destory_proc(u8 set_opt, u8 update_flash, union HOSTIF_CMD_PARAMS_UNION *
 	hif->uart_atcmd_bits &= ~(1 << UART_ATCMD_BIT_BT);
 	hif->uart_atcmd_bits |= (1<<UART_ATCMD_BIT_ACTIVE_BT_DM);
 	
-    ret = tls_at_bt_destroy();   
+    ret = tls_ble_destroy();   
 	if (ret != TLS_BT_STATUS_SUCCESS)
 	{
 		hif->uart_atcmd_bits &= ~(1 << UART_ATCMD_BIT_ACTIVE_BT_DM);
@@ -4800,7 +4800,7 @@ int bt_destory_proc(u8 set_opt, u8 update_flash, union HOSTIF_CMD_PARAMS_UNION *
 	
 	ret = bt_wait_rsp_timeout(cmd->bt.cmd_mode, cmd, hif, 10);
     //cleanup bluedroid, free memory; note, when got adapter off evt, cleanup bluedroid
-	tls_at_bt_cleanup_host();
+	tls_ble_cleanup_host();
 	tls_cmd_get_oneshot(&flag);
 	if(flag == 0x04)
 	{
@@ -4810,7 +4810,7 @@ int bt_destory_proc(u8 set_opt, u8 update_flash, union HOSTIF_CMD_PARAMS_UNION *
 end_tag:
     
 #else
-     ret = tls_at_bt_destroy();
+     ret = tls_ble_destroy();
 	tls_cmd_get_oneshot(&flag);
 	if(flag == 0x04)
 	{

@@ -199,7 +199,7 @@ extern void (*elog_assert_hook)(const char* expr, const char* func, size_t line)
 void elog_assert_set_hook(void (*hook)(const char* expr, const char* func, size_t line));
 int8_t elog_find_lvl(const char *log);
 const char *elog_find_tag(const char *log, uint8_t lvl, size_t *tag_len);
-void elog_hexdump(const char *name, uint8_t width, const void *buf, uint16_t size);
+void elog_hexdump(uint8_t level, const char *tag, const char *name, uint8_t width, const void *buf, uint16_t size);
 
 #define elog_a(tag, ...)     elog_assert(tag, __VA_ARGS__)
 #define elog_e(tag, ...)     elog_error(tag, __VA_ARGS__)
@@ -207,6 +207,13 @@ void elog_hexdump(const char *name, uint8_t width, const void *buf, uint16_t siz
 #define elog_i(tag, ...)     elog_info(tag, __VA_ARGS__)
 #define elog_d(tag, ...)     elog_debug(tag, __VA_ARGS__)
 #define elog_v(tag, ...)     elog_verbose(tag, __VA_ARGS__)
+
+#define elog_a_hexdump(tag, ...) elog_hexdump(ELOG_LVL_ASSERT, tag, __VA_ARGS__)
+#define elog_e_hexdump(tag, ...) elog_hexdump(ELOG_LVL_ERROR, tag, __VA_ARGS__)
+#define elog_w_hexdump(tag, ...) elog_hexdump(ELOG_LVL_WARN, tag, __VA_ARGS__)
+#define elog_i_hexdump(tag, ...) elog_hexdump(ELOG_LVL_INFO, tag, __VA_ARGS__)
+#define elog_d_hexdump(tag, ...) elog_hexdump(ELOG_LVL_DEBUG, tag, __VA_ARGS__)
+#define elog_v_hexdump(tag, ...) elog_hexdump(ELOG_LVL_VERBOSE, tag, __VA_ARGS__)
 
 /**
  * log API short definition
