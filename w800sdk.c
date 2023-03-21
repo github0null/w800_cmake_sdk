@@ -3,7 +3,7 @@
 
 #define W800_SDK_VER_MAIN     0
 #define W800_SDK_VER_SUB      1
-#define W800_SDK_VER_REVISION 2
+#define W800_SDK_VER_REVISION 3
 
 #define _2STR(x) #x
 #define CONV_STR(x) _2STR(x)

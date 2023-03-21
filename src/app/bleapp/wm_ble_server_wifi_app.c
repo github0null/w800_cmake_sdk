@@ -1063,7 +1063,7 @@ static int wm_ble_wifi_cfg_disconnected_cb(int status)
     /*Try to free rsp list if exists*/
 	dl_list_for_each_safe(rsp,rsp_next,rsp_list,msg_buffer_t,list)
 	{
-		dl_list_del(rsp);
+		dl_list_del(&rsp->list);
 		free_rsp_content(rsp);
 	}
     if(rsp_list)
@@ -1258,13 +1258,15 @@ static int wm_ble_wifi_cfg_exec_write_cb(int exec)
 
 static int wm_ble_wifi_cfg_mtu_changed_cb(int mtu)
 {
-    int proper_mtu;  //per controller data length ext, max 255 payload bytes
-    //244+3+8 = 255;
-    proper_mtu = min(mtu, 247); //att level mtu;
+    int proper_mtu; // per controller data length ext, max 255 payload bytes
+    // 244+3+8 = 255;
+    proper_mtu = min(mtu, 247); // att level mtu;
 
-    proper_mtu -= 3;            //gatt level mtu;
-    
-    PAYLOAD_FRAGMENT_LENGTH = proper_mtu  -5; //app msg mtu;  5: wifi cfg protocal msg header;    
+    proper_mtu -= 3; // gatt level mtu;
+
+    PAYLOAD_FRAGMENT_LENGTH = proper_mtu - 5; // app msg mtu;  5: wifi cfg protocal msg header;
+
+    return 0;
 }
 
 static wm_ble_wifi_prof_callbacks_t wm_ble_wifi_cfg_cb =

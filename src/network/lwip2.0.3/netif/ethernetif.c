@@ -375,7 +375,7 @@ ethernetif_init(struct netif *netif)
 #if LWIP_NETIF_HOSTNAME
 	/* Initialize interface hostname */
     sprintf((char *)host_name, "WinnerMicro_%02X%02X", mac_addr[4], mac_addr[5]);
-	netif->hostname = host_name;
+	netif->hostname = (char *)host_name;
 #endif /* LWIP_NETIF_HOSTNAME */
 
   /*
