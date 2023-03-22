@@ -1,6 +1,6 @@
 @echo off
 
-set CHECK_PATH=.\tools\msys\bin
+set CHECK_PATH=.\tools\msys\bin\bash.exe
 
 IF NOT EXIST %CHECK_PATH% (
     .\tools\7z\7za.exe x -y -r -aoa -o./tools ./tools/w800/toolchain/msys.7z
