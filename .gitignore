@@ -17,3 +17,4 @@ launch.json
 /tools/csky-elfabiv2-tools-mingw-minilibc-20210423
 /tools/msys
 .cache
+/tools/**/w800_secboot.img
