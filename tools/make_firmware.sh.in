@@ -81,14 +81,14 @@ rm -f ${DST_DIR}/*.img ${DST_DIR}/*.gz ${DST_DIR}/*.fls ${DST_DIR}/*.map
 cp -f "./$ProjName.map" "${DST_DIR}/${ProjName}.map"
 
 if [ $signature -eq 1 ]; then
-  if [ "@CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH@"x = "x" ]; then
-    sign_capub_path=${W800_TOOLS_DIR}/w800/ca/cakey.pem
-    echo "!!! WARNING !!! Use default public key($sign_capub_path) to make signature"
+  if [ "@CONFIG_W800_IMAGE_SIGN_PRIKEY_PATH@"x = "x" ]; then
+    sign_prikey_path=${W800_TOOLS_DIR}/w800/ca/cakey.pem
+    echo "!!! WARNING !!! Use default private key($sign_prikey_path) to make signature"
   else
-    sign_capub_path=${TOP_DIR}/@CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH@
+    sign_prikey_path=${TOP_DIR}/@CONFIG_W800_IMAGE_SIGN_PRIKEY_PATH@
   fi
   # combine app.img + sign.bin as app_sign.img
-  openssl dgst -sign $sign_capub_path -sha1 -out "$ProjName"_sign.dat ./"$ProjName".img
+  openssl dgst -sign $sign_prikey_path -sha1 -out "$ProjName"_sign.dat ./"$ProjName".img
   cat "$ProjName".img "$ProjName"_sign.dat > "$ProjName"_sign.img
   mv ./"$ProjName"_sign.img ${DST_DIR}/"$ProjName"_sign.img
   # combine boot.img + app_sign.img
