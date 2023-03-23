@@ -229,4 +229,10 @@ SECTIONS
     /DISCARD/ : {
         *(.note.GNU-stack) *(.gnu_debuglink) *(.gnu.lto_*) 
     }
+
+    /* '.img_dummy' section doesn't contains any symbols. 
+       It is only used for linker to calculate size of flash */
+    .img_dummy (NOLOAD): {
+        KEEP(*(.img_dummy));
+    } > REGION_RODATA
 }

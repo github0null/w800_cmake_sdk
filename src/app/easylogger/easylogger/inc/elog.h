@@ -256,6 +256,13 @@ void elog_hexdump(uint8_t level, const char *tag, const char *name, uint8_t widt
     #define log_v(...)       ((void)0);
 #endif
 
+#define log_a_hexdump(...) elog_a_hexdump(LOG_TAG, __VA_ARGS__)
+#define log_e_hexdump(...) elog_e_hexdump(LOG_TAG, __VA_ARGS__)
+#define log_w_hexdump(...) elog_w_hexdump(LOG_TAG, __VA_ARGS__)
+#define log_i_hexdump(...) elog_i_hexdump(LOG_TAG, __VA_ARGS__)
+#define log_d_hexdump(...) elog_d_hexdump(LOG_TAG, __VA_ARGS__)
+#define log_v_hexdump(...) elog_v_hexdump(LOG_TAG, __VA_ARGS__)
+
 /* assert API short definition */
 #if !defined(assert)
     #define assert           ELOG_ASSERT

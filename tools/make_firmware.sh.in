@@ -68,6 +68,7 @@ if [ $code_encrypt -eq 1 ]; then
   echo -n "@CONFIG_W800_CODE_ENCRYPT_KEY@" > ./encrypt_key.txt
   openssl enc -aes-128-ecb -in ./"$ProjName".bin -out ./"$ProjName"_enc.bin -K ${CODE_ENCRYPT_KEY} -iv 01010101010101010101010101010101
   openssl rsautl -encrypt -in ./encrypt_key.txt -inkey ${W800_TOOLS_DIR}/w800/ca/capub_"$prikey_sel".pem -pubin -out key_en.dat
+  # combine img: app_code_enc.bin + usrkey_enc.bin + pubkey_N.bin --> app.img
   cat "$ProjName"_enc.bin key_en.dat > "$ProjName"_enc_key.bin
   cat "$ProjName"_enc_key.bin ${W800_TOOLS_DIR}/w800/ca/capub_"$prikey_sel"_N.dat > "$ProjName"_enc_key_N.bin
   ${W800_TOOLS_DIR}/w800/wm_tool -b ./"$ProjName"_enc_key_N.bin -o ./"$ProjName" -it $img_type -fc 0 -ra $run_img_pos -ih $run_img_header -ua $upd_img_pos -nh 0 -un 0
@@ -89,7 +90,7 @@ if [ $signature -eq 1 ]; then
   fi
   # combine app.img + sign.bin as app_sign.img
   openssl dgst -sign $sign_prikey_path -sha1 -out "$ProjName"_sign.dat ./"$ProjName".img
-  cat "$ProjName".img "$ProjName"_sign.dat > "$ProjName"_sign.img
+  cat ./"$ProjName".img ./"$ProjName"_sign.dat > ./"$ProjName"_sign.img
   mv ./"$ProjName"_sign.img ${DST_DIR}/"$ProjName"_sign.img
   # combine boot.img + app_sign.img
   ${W800_TOOLS_DIR}/w800/wm_tool -b ${W800_TOOLS_DIR}/w800/w800_secboot.bin -o ${DST_DIR}/w800_secboot -it 0 -fc 0 -ra $sec_img_pos -ih $sec_img_header -ua $upd_img_pos -nh $run_img_header -un 0
