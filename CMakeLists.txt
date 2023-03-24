@@ -47,6 +47,21 @@ target_link_directories(${MODULE_NAME} PUBLIC
 target_link_libraries(${MODULE_NAME} PUBLIC 
     -Wl,--whole-archive ${W800_PRIVATE_LIBS} ${W800_TARGET_LIBS} -Wl,--no-whole-archive)
 
+# gen signature pubkey into C header
+if(CONFIG_W800_IMAGE_SIGN)
+    if((NOT EXISTS "${PROJECT_SOURCE_DIR}/${CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH}") OR ("${CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH}" STREQUAL ""))
+        set(CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH "${CMAKE_CURRENT_LIST_DIR}/tools/w800/ca/capub.pem")
+    endif()
+    message(STATUS "firmware signature pubkey: '${CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH}'")
+    file(READ "${CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH}" _sign_pubkey_txt)
+    string(REPLACE "\n" ";" _sign_pubkey_lines ${_sign_pubkey_txt})
+    list(FILTER _sign_pubkey_lines EXCLUDE REGEX "^-+BEGIN.*")
+    list(FILTER _sign_pubkey_lines EXCLUDE REGEX "^-+END.*")
+    list(FILTER _sign_pubkey_lines EXCLUDE REGEX "[ ]+")
+    list(JOIN _sign_pubkey_lines "" _sign_pubkey_base64_string)
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/w800sdk_pubkey_sign.h" "#define W800SDK_PUBKEY_SIGN_BASE64 \"${_sign_pubkey_base64_string}\"")
+endif()
+
 set(EXPORT_INC_DIRS)
 set(EXPORT_GCC_FLGS)
 set(EXPORT_GCC_DEFS)

@@ -89,6 +89,7 @@ if [ $signature -eq 1 ]; then
     sign_prikey_path=${TOP_DIR}/@CONFIG_W800_IMAGE_SIGN_PRIKEY_PATH@
   fi
   # combine app.img + sign.bin as app_sign.img
+  openssl dgst -sha1 ./"$ProjName".img
   openssl dgst -sign $sign_prikey_path -sha1 -out "$ProjName"_sign.dat ./"$ProjName".img
   cat ./"$ProjName".img ./"$ProjName"_sign.dat > ./"$ProjName"_sign.img
   mv ./"$ProjName"_sign.img ${DST_DIR}/"$ProjName"_sign.img

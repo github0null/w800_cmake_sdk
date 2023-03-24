@@ -5,8 +5,7 @@
 #include <string.h>
 
 #include "w800sdk_conf.h"
-#include "wm_internal_flash.h"
-#include "wm_fwup.h"
+#include "wm_include.h"
 #include "elog.h"
 
 #define W800_SDK_VER_MAIN     0
@@ -17,6 +16,13 @@
 #define CONV_STR(x) _2STR(x)
 
 // --- internal datas
+
+#if CONFIG_W800_IMAGE_SIGN
+#include "w800sdk_pubkey_sign.h"
+    __attribute__((used))
+    __attribute__((section(".usr_pubkey")))
+        static const char firmware_sign_pubkey_base64[] = W800SDK_PUBKEY_SIGN_BASE64;
+#endif
 
 // --- export funcs
 
@@ -54,22 +60,21 @@ int w800sdk_get_img_info(struct IMAGE_HEADER_PARAM *out)
     return WM_SUCCESS;
 }
 
-// int w800sdk_get_img_signature(uint8_t buff_128bytes[])
-// {
-//     struct IMAGE_HEADER_PARAM img_info;
+int w800sdk_get_img_signature(struct w800_img_signature_info_t *info)
+{
+    struct IMAGE_HEADER_PARAM img_info;
 
-//     if (w800sdk_get_img_info(&img_info) != WM_SUCCESS) {
-//         return -1;
-//     }
+    if (w800sdk_get_img_info(&img_info) != WM_SUCCESS)
+        return -1;
 
-//     if (!img_info.img_attr.b.signature) {
-//         log_w("image not has a signature !");
-//         return -1;
-//     }
+    // image not have a signature !
+    if (!img_info.img_attr.b.signature)
+        return -1;
 
-//     uint32_t sign_addr = img_info.img_addr + img_info.img_len;
-//     return tls_fls_read(sign_addr, buff_128bytes, 128);
-// }
+    info->sign_addr = img_info.img_addr + img_info.img_len;
+
+    return tls_fls_read(info->sign_addr, info->sign_data, sizeof(info->sign_data));
+}
 
 // --- flash dummy
 

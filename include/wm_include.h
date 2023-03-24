@@ -147,12 +147,21 @@
 #include "net/wm_socket.h"
 #include "net/wm_sockets.h"
 
+// --- export types
+
+struct w800_img_signature_info_t {
+    uint32_t sign_addr;
+    uint8_t  sign_data[128];
+};
+
+// --- export funcs
+
 int         w800sdk_get_version_main(void);
 int         w800sdk_get_version_sub(void);
 int         w800sdk_get_version_revision(void);
 const char *w800sdk_get_version_string(void);
 
 int w800sdk_get_img_info(struct IMAGE_HEADER_PARAM *info);
-int w800sdk_get_img_signature(uint8_t buff_128bytes[]);
+int w800sdk_get_img_signature(struct w800_img_signature_info_t *info);
 
 #endif
