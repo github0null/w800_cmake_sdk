@@ -4,9 +4,13 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "elog.h"
+
 #include "w800sdk_conf.h"
 #include "wm_include.h"
-#include "elog.h"
+
+#include "mbedtls/base64.h"
+#include "mbedtls/rsa.h"
 
 #define W800_SDK_VER_MAIN     0
 #define W800_SDK_VER_SUB      1
@@ -60,21 +64,40 @@ int w800sdk_get_img_info(struct IMAGE_HEADER_PARAM *out)
     return WM_SUCCESS;
 }
 
-int w800sdk_get_img_signature(struct w800_img_signature_info_t *info)
-{
-    struct IMAGE_HEADER_PARAM img_info;
+// int w800sdk_get_img_signature(struct w800_img_signature_info_t *info)
+// {
+//     struct IMAGE_HEADER_PARAM img_info;
+//     int rc;
 
-    if (w800sdk_get_img_info(&img_info) != WM_SUCCESS)
-        return -1;
+//     rc = w800sdk_get_img_info(&img_info);
+//     if (rc != WM_SUCCESS)
+//         return -1;
 
-    // image not have a signature !
-    if (!img_info.img_attr.b.signature)
-        return -1;
+//     // image not have a signature !
+//     if (!img_info.img_attr.b.signature)
+//         return -1;
 
-    info->sign_addr = img_info.img_addr + img_info.img_len;
+//     info->sign_addr = img_info.img_addr + img_info.img_len;
 
-    return tls_fls_read(info->sign_addr, info->sign_data, sizeof(info->sign_data));
-}
+//     rc = tls_fls_read(info->sign_addr, info->sign_data, sizeof(info->sign_data));
+//     if (rc != WM_SUCCESS) {
+//         log_e("tls_fls_read failed !");
+//         return -1;
+//     }
+
+//     uint8_t *pubkey     = tls_mem_calloc(256);
+//     uint16_t pubkey_len = 0;
+//     rc = mbedtls_base64_decode(pubkey, 256, &pubkey_len, firmware_sign_pubkey_base64, sizeof(firmware_sign_pubkey_base64) - 1);
+//     if (rc != WM_SUCCESS) {
+//         tls_mem_free(pubkey);
+//         log_e("mbedtls_base64_decode failed ! rc=%d", rc);
+//         return -1;
+//     }
+
+//     mbedtls_rsa_context rsa_ctx;
+//     mbedtls_rsa_init(&rsa_ctx, MBEDTLS_RSA_PKCS_V15, 0);
+//     mbedtls_rsa_pkcs1_decrypt(&rsa_ctx, NULL, NULL, MBEDTLS_RSA_PUBLIC, MBEDTLS_MD_SHA1, );
+// }
 
 // --- flash dummy
 
