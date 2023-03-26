@@ -67,6 +67,8 @@ int w800sdk_get_img_info(struct IMAGE_HEADER_PARAM *out)
 
 int w800sdk_get_img_signature(struct w800_img_signature_info_t *info)
 {
+#if CONFIG_W800_IMAGE_SIGN // Have firmware signature
+
     struct IMAGE_HEADER_PARAM img_info;
     int rc;
 
@@ -145,6 +147,12 @@ int w800sdk_get_img_signature(struct w800_img_signature_info_t *info)
     info->verify_passed = rc == 0;
 
     return 0;
+
+#else // Not have signature in firmware
+
+    return -1;
+
+#endif
 }
 
 // --- flash dummy
