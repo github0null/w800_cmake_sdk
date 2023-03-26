@@ -55,7 +55,7 @@ if(CONFIG_W800_IMAGE_SIGN)
     message(STATUS "firmware signature pubkey: '${CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH}'")
     file(READ "${CONFIG_W800_IMAGE_SIGN_PUBKEY_PATH}" _sign_pubkey_txt)
     string(REPLACE "\n" "\\n" _sign_pubkey_base64_string ${_sign_pubkey_txt})
-    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/w800sdk_pubkey_sign.h" "#define W800SDK_PUBKEY_SIGN_BASE64 \"${_sign_pubkey_base64_string}\"")
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/w800sdk_pubkey_sign.h" "#define W800SDK_PUBKEY_SIGN_PEM \"${_sign_pubkey_base64_string}\"")
 endif()
 
 set(EXPORT_INC_DIRS)

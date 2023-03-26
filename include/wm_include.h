@@ -152,7 +152,8 @@
 struct w800_img_signature_info_t {
     uint32_t sign_addr;      // 固件的签名数据地址
     uint8_t  sign_data[128]; // 固件的原始签名数据
-    uint8_t  image_sha1[20]; // 固件的 sha1（从 sign_data 生成）
+    uint8_t  image_sha1[20]; // 固件sha1
+    bool     verify_passed;  // 验签通过
 };
 
 // --- export funcs
