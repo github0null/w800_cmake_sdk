@@ -90,7 +90,7 @@ int w800sdk_get_img_signature(struct w800_img_signature_info_t *info)
     tls_crypto_sha1_init(&sha1_ctx);
 
     // sha1 image header
-    tls_crypto_sha1_update(&sha1_ctx, &img_info, sizeof(struct IMAGE_HEADER_PARAM));
+    tls_crypto_sha1_update(&sha1_ctx, (const uint8_t *)&img_info, sizeof(struct IMAGE_HEADER_PARAM));
 
     // sha1 image body
     uint32_t rd_addr = img_info.img_addr;
