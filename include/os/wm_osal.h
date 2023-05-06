@@ -593,12 +593,12 @@ tls_os_status_t tls_os_queue_flush(tls_os_queue_t *queue);
 /**
  * @brief get current time with 'ms' unit
 */
- #define tls_os_get_time_ms() ((tls_os_get_time() * 1000) / HZ)
+ u32 tls_os_get_time_ms(void);
 
 /**
  * @brief get current time with 'sec' unit
 */
- #define tls_os_get_time_sec() (tls_os_get_time() / HZ)
+ u32 tls_os_get_time_sec(void);
 
 /**
  * @brief          This function is used to disable interrupts by preserving
@@ -729,6 +729,11 @@ tls_os_status_t tls_os_timer_delete(tls_os_timer_t *timer);
  void tls_os_time_delay(u32 ticks);
 
 /**
+ * @brief Delay with 'ms' unit
+*/
+ void tls_os_time_delay_ms(u32 ms);
+
+/**
  * @brief Get the tick count of the system from 'ms'
 */
  #define tls_os_ms_2_tick(ms) (((ms) * HZ) / 1000u)
@@ -737,11 +742,6 @@ tls_os_status_t tls_os_timer_delete(tls_os_timer_t *timer);
  * @brief Get the tick count of the system from 'seconds'
 */
  #define tls_os_sec_2_tick(sec) ((sec) * HZ)
-
-/**
- * @brief Delay with 'ms' unit
-*/
- #define tls_os_time_delay_ms(ms) tls_os_time_delay(tls_os_ms_2_tick(ms))
 
 /**
  * @brief          This function is used to display all the tasks' detail status.
