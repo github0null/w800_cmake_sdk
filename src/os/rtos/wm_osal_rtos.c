@@ -102,7 +102,7 @@ tls_os_status_t tls_os_task_create(tls_os_task_t *task,
 		(portSTACK_TYPE *)stk_start,
 		stk_size/sizeof(u32),
 		param,
-		configMAX_PRIORITIES - prio,	/*ÓÅÏÈ¼¶µßµ¹Ò»ÏÂ£¬ÓëucosÓÅÏÈ¼¶Ë³ÐòÏà·´*/
+		configMAX_PRIORITIES - prio,	/*ä¼˜å…ˆçº§é¢ å€’ä¸€ä¸‹ï¼Œä¸Žucosä¼˜å…ˆçº§é¡ºåºç›¸å*/
 		task	);
 	//printf("configMAX_PRIORITIES - prio:%d\n", configMAX_PRIORITIES - prio);
     if (error == pdTRUE)
@@ -313,7 +313,7 @@ u8 tls_os_task_schedule_state()
 *              2) You MUST NOT change the priority of the task that owns the mutex
 *********************************************************************************************************
 */
-//²»¿ÉÔÚÖÐ¶ÏÖÐµ÷ÓÃ
+//ä¸å¯åœ¨ä¸­æ–­ä¸­è°ƒç”¨
  tls_os_status_t tls_os_mutex_acquire(tls_os_mutex_t *mutex,
         u32 wait_time)
 {
@@ -468,7 +468,7 @@ u8 tls_os_task_schedule_state()
 *			TLS_OS_ERROR
 *********************************************************************************************************
 */
-//¸Ãº¯Êý²»¿ÉÓÃÓÚÖÐ¶Ï·þÎñ³ÌÐòÖÐ
+//è¯¥å‡½æ•°ä¸å¯ç”¨äºŽä¸­æ–­æœåŠ¡ç¨‹åºä¸­
  tls_os_status_t tls_os_sem_acquire(tls_os_sem_t *sem,
         u32 wait_time)
 {
@@ -623,7 +623,7 @@ extern u32 __heap_start;
  tls_os_status_t tls_os_queue_delete(tls_os_queue_t *queue)
 {
 
-	if ((u32 *)(((xQUEUE *)queue)->pcHead) >= &__heap_start)		//Èç¹ûÃ»ÓÐ´Ó¶ÑÉêÇë£¬²»ÓÃÊÍ·Å)
+	if ((u32 *)(((xQUEUE *)queue)->pcHead) >= &__heap_start)		//å¦‚æžœæ²¡æœ‰ä»Žå †ç”³è¯·ï¼Œä¸ç”¨é‡Šæ”¾)
 	{
 		tls_mem_free(((xQUEUE *)queue)->pcHead);
 	}
@@ -1008,6 +1008,16 @@ extern volatile uint32_t sys_count;
 #endif
 }
 
+u32 tls_os_get_time_ms(void)
+{
+	return (tls_os_get_time() * 1000) / HZ;
+}
+
+u32 tls_os_get_time_sec(void)
+{
+	return tls_os_get_time() / HZ;
+}
+
 /**********************************************************************************************************
 * Description: Disable interrupts by preserving the state of interrupts.
 *
@@ -1255,6 +1265,14 @@ u32 tls_os_timer_expirytime(tls_os_timer_t *timer)
  void tls_os_time_delay(u32 ticks)
 {
 	vTaskDelay(ticks);
+}
+
+/**
+ * @brief Delay with 'ms' unit
+*/
+ void tls_os_time_delay_ms(u32 ms)
+{
+	vTaskDelay(tls_os_ms_2_tick(ms));
 }
 
 /*
