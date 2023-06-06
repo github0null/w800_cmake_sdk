@@ -5,6 +5,8 @@
 #ifndef H_MYNEWT_SYSCFG_
 #define H_MYNEWT_SYSCFG_
 
+#include "w800sdk_conf.h"
+
 /**
  * This macro exists to ensure code includes this header when needed.  If code
  * checks the existence of a setting directly via ifdef without including this
