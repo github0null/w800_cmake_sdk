@@ -25,19 +25,21 @@ MEMORY
 {
 	I-SRAM : ORIGIN = @CONFIG_W800_IMAGE_APP_ADDR@ , LENGTH = @CONFIG_W800_IMAGE_APP_SIZE@ /* I-SRAM */
 	V-SRAM : ORIGIN = 0x20000000 , LENGTH = 0x100   /* SRAM IRQ_Vector Data */
-	D-SRAM : ORIGIN = 0x20000100 , LENGTH = 0x47f00 /* D-SRAM   288KB */
+    D-SRAM : ORIGIN = 0x20000100 , LENGTH = 0x47f00 /* D-SRAM   288KB */
     P-SRAM : ORIGIN = 0X30000000 , LENGTH = @CONFIG_W800_EXT_PSRAM_SIZE@ /* Extern PSRAM (max size: 8MB) */
 }
 
-__min_heap_size = 0x18000;
-PROVIDE (__ram_end  = 0x2003A000);
-PROVIDE (__heap_end = __ram_end);
+__sram_end = 0x20048000;
+
+PROVIDE (__HW_HSPI_BUF_SZ = 0x2000); /* 8K */
+PROVIDE (__HW_WIFI_BUF_SZ = 0xC800); /* 50K */
 
 REGION_ALIAS("REGION_TEXT",    I-SRAM);
 REGION_ALIAS("REGION_RODATA",  I-SRAM);
 REGION_ALIAS("REGION_VDATA",   V-SRAM);
 REGION_ALIAS("REGION_DATA",    D-SRAM);
 REGION_ALIAS("REGION_BSS",     D-SRAM);
+REGION_ALIAS("REGION_HARDWARE",D-SRAM);
 REGION_ALIAS("REGION_EXTDATA", P-SRAM);
 
 ENTRY(Reset_Handler)
@@ -153,13 +155,29 @@ SECTIONS
         __end = . ;
         end = . ;
         __bss_end__ = .;
-        } > REGION_BSS
-        ._user_heap : {
-        . = ALIGN(0x4) ;
-        __heap_start = .;
-        . += __min_heap_size;
-        . = ALIGN(0x4) ;
     } > REGION_BSS
+
+    /*heap*/
+    .user_heap : {
+        . = ALIGN(4);
+        __heap_start = .;
+    } > REGION_BSS
+
+    /* this region must be in 0x20028000~0x20048000 */
+    . = __sram_end - __HW_HSPI_BUF_SZ - __HW_WIFI_BUF_SZ;
+    . = ALIGN(4);
+    __hw_data_start = .;
+    __heap_end = __hw_data_start;
+    ._hw_data __hw_data_start : ALIGN(4)
+    {
+        ASSERT ((__hw_data_start >= 0x20028000), "Error: '._hw_data' region must be in 0x20028000~0x20048000");
+        /*hspi*/
+        __hspi_buf_start = .;
+        . += __HW_HSPI_BUF_SZ;
+        /*wifi*/
+        __wifi_buf_start = .;
+        . += __HW_WIFI_BUF_SZ;
+    } > REGION_HARDWARE
 
     /* This section will not be loaded, beacuse it's a external RAM 
        @note Any symbols in this section must be a no-initial-value symbol, 

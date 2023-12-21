@@ -666,6 +666,13 @@ int xPortMemIsKernel(void *mem)
     return ((mem >= (void *)ucHeap) && (mem < (void *)(ucHeap + configTOTAL_HEAP_SIZE))) ? 1 : 0;
 }
 
+size_t xPortGetMemRemainSize()
+{
+	HeapStats_t stat;
+	vPortGetHeapStats(&stat);
+	return stat.xAvailableHeapSpaceInBytes;
+}
+
 #endif // !configUSE_HEAP5
 
 #endif // !TLS_OS_FREERTOS

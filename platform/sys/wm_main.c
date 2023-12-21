@@ -381,6 +381,10 @@ void task_start (void *data)
     tls_get_tx_gain(&tx_gain_group[0]);
     TLS_DBGPRT_INFO("tx gain ");
     TLS_DBGPRT_DUMP((char *)(&tx_gain_group[0]), 27);
+    // 假设tx是7, rx是3
+    // (7+3)*2*1638+4096 = 36k
+    // (6+4)*2*1638+4096 = 36k
+    // (7+7)*2*1638+4096 = 49k
     if (tls_wifi_mem_cfg(WIFI_MEM_START_ADDR, 7, 7)) /*wifi tx&rx mem customized interface*/
     {
         TLS_DBGPRT_INFO("wl mem initial failured\n");
@@ -445,6 +449,11 @@ void task_start (void *data)
         .stopbits   = TLS_PARAM_UART_STOPBITS_1BITS,
     };
     tls_uart_port_init(TLS_UART_0, &uart_cfg, 0);
+
+    //
+    extern size_t xPortGetMemRemainSize(void);
+    log_i("RTOS heap remain size: %d KB", xPortGetMemRemainSize() / 1024);
+    log_i("libc heap remain size: %d KB", total_mem_size / 1024);
 
     // main task
     static uint8_t usr_main_stk[CONFIG_USER_MAIN_TASK_STACK_SIZE];
